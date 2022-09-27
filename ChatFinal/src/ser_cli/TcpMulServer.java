@@ -74,6 +74,7 @@ public class TcpMulServer{
 					try {
 						nickname = inputStream.readUTF();
 						ChatDAO.getInstance().insertList(nickname);//현접속명단에 저장 
+						ChatDAO.getInstance().insertUser(nickname);//userList명단에 추가, 접속 history
 						sendChat("☞"+nickname + " 님 입장하셨습니다.");//모든 클라이언트에 알린다.outputStream
 						userList.add(nickname);
 					} catch (ClassNotFoundException | SQLException e) {

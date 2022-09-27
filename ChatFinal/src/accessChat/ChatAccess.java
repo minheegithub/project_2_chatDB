@@ -105,12 +105,10 @@ public class ChatAccess extends JFrame {
 				}else{
 					boolean chkuser;
 					try {
-//						chkuser = ChatDAO.getInstance().checkUser("##"+nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						chkuser = ChatDAO.getInstance().checkUser(nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						if (chkuser) {
 							JOptionPane.showMessageDialog(null, "현재 동일한 닉네임으로 접속중입니다.");
 						}else {
-							ChatDAO.getInstance().insertUser(nickname2);//userList명단에 추가, 접속 history
 							new TcpMulClient(ip2, port2, nickname2);
 							setVisible(false);
 						}
@@ -136,12 +134,10 @@ public class ChatAccess extends JFrame {
 				}else{
 					boolean chkuser;
 					try {
-//						chkuser = ChatDAO.getInstance().checkUser("##"+nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						chkuser = ChatDAO.getInstance().checkUser(nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						if (chkuser) {
 							JOptionPane.showMessageDialog(null, "현재 동일한 닉네임으로 접속중입니다.");
 						}else {
-							ChatDAO.getInstance().insertUser(nickname2);//접속자 명단 일별로 저장
 							new TcpMulClient(ip2, port2, nickname2);
 							setVisible(false);
 						}
