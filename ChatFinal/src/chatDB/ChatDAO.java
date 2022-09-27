@@ -1,14 +1,11 @@
 package chatDB;
 
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-
-
 
 public class ChatDAO {
 
@@ -30,7 +27,7 @@ public class ChatDAO {
 	}
 	
 
-	public boolean insertDb(String nickname, String serverIp, String clientIp, int serverPort,String contents) {
+	public boolean insertDb(String nickname, String serverIp, String clientIp, int serverPort, String contents) {
 		String sql = "insert into chatt1 values(?,?,?,?,?,sysdate)";
 
 		try {

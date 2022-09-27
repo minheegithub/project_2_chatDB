@@ -7,36 +7,33 @@ import java.util.*;
 
 import chatDB.ChatDAO;
 
-//class ServerClass {
 public class TcpMulServer{
-    ArrayList<ThreadServerClass> threadList = new ArrayList<ThreadServerClass>();
-    ArrayList<String>userList=new ArrayList<String>();
+    
+	ArrayList<ThreadServerClass> threadList = new ArrayList<ThreadServerClass>();
+    ArrayList<String> userList = new ArrayList<String>();
 
-//    Socket socket;
-//    DataOutputStream outputStream;
-    String contents;//+
-   /* String serverIp;
-    String clientIp;//+
-    int serverPort;//+
-*/
+    String contents;
+
 	ServerSocket ss1;
 	Socket s1;
+	
 	public TcpMulServer(int portno) throws IOException, ClassNotFoundException, SQLException {
-		 String serverIp = "";
-		 String clientIp = "";//+
-		 int serverPort = 0;//+
+		
+		String serverIp = "";
+		String clientIp = "";
+		int serverPort = 0;
 
 		Socket s1 = null;
 		
 		ss1 = new ServerSocket(portno);
 
 		while (true) {
-			s1 = ss1.accept();
-			System.out.println("클라이언트 아이피 주소: " + s1.getInetAddress() + " , 클라이언트 접속포트: " + s1.getPort());
+			s1 = ss1.accept();//클라이언트마다 포트번호 다르다.
+			System.out.println("TcpMulServer 클라이언트 아이피 주소: " + s1.getInetAddress() + " , 클라이언트 접속포트: " + s1.getPort()+", 서버포트:"+s1.getLocalPort());
 			serverIp = s1.getLocalAddress().toString();
 			clientIp = s1.getInetAddress().toString();//+
 			serverPort = s1.getLocalPort();//+
-			System.out.println(serverIp.substring(1, serverIp.length()));
+//			System.out.println(serverIp.substring(1, serverIp.length()));
 			serverIp = serverIp.substring(1, serverIp.length());
 			clientIp = clientIp.substring(1, clientIp.length());
 			// 한명이 접속하면 ThreadServerClass 쓰레드에 올려놓음
@@ -44,7 +41,7 @@ public class TcpMulServer{
 			tServer1.start();
 
 			threadList.add(tServer1);
-			System.out.println("접속자 수 : " + threadList.size());
+			System.out.println("TcpMulServer접속자 수 : " + threadList.size());//클라이언트가 나갔을때 콘솔에 표시
 		} // whle-end
 
 	}//생성자
@@ -64,7 +61,7 @@ public class TcpMulServer{
 			this.clientIp1 = clientIp1;
 			this.serverPort1 = serverPort1;
 			
-			System.out.println("소켓:"+s1);
+			System.out.println("TcpMulServer 소켓:"+s1);
 			inputStream = new DataInputStream(s1.getInputStream());
 			outputStream = new DataOutputStream(s1.getOutputStream());
 			
@@ -77,13 +74,13 @@ public class TcpMulServer{
 					try {
 						nickname = inputStream.readUTF();
 						ChatDAO.getInstance().insertList(nickname);//현접속명단에 저장 
-						sendChat("☞"+nickname + " 님 입장하셨습니다.");//모든 클라이언트에 알린다.
+						sendChat("☞"+nickname + " 님 입장하셨습니다.");//모든 클라이언트에 알린다.outputStream
 						userList.add(nickname);
 					} catch (ClassNotFoundException | SQLException e) {
 					}
 
 				}
-				//클라이언트 한사람에대 들어온 대화 내용을 다른사람들에게 뿌려줄 준비를 하겠다.
+				//클라이언트 한사람에게 들어온 대화 내용을 다른사람들에게 뿌려줄 준비를 하겠다.
 				while (inputStream != null) {
 					contents = inputStream.readUTF();
 					if(contents.split("/w").length == 1) {  
@@ -94,16 +91,16 @@ public class TcpMulServer{
 						}
 					}
 					//클라이언트가 보낸 채팅 내용을 sendChat메소드를 이용해 접속한 사람(들)에게 내보내기로 한다.
-					sendChat(contents); 
+					sendChat(contents); //outputStream
 				
 				} // 정상채팅의 경우는 계속 while 문안에서 반복 loop
 
 			} catch (IOException e) { // 여기로 왔단 얘기는 에러가 발생한 것 //나가버린 경우
-				// e.printStackTrace();
-
+				System.out.println("TcpMulServer IOException : "+nickname+"나갔다."); 
 			} finally {
-				
+				System.out.println("finally");
 				for (int i = 0; i < threadList.size(); i++) {
+					
 					if (socket1.equals(threadList.get(i).socket1)) {
 						try {
 							threadList.remove(i);
@@ -116,7 +113,7 @@ public class TcpMulServer{
 					}
 				}
 				
-				System.out.println("접속자 수 : " + threadList.size() + " 명");
+				System.out.println("TcpServer 퇴장 후 접속자 수 : " + threadList.size() + " 명");
 			} // finally-end
 
 		}// run-end
@@ -126,7 +123,7 @@ public class TcpMulServer{
 		//닉네임 정지훈이 채팅방에 귓속말로 김태희에게 "하이"라고 입력했을때
 	      //입력 : /w 김태희 하이
 	      //실제 보내지는 내용 : 정지훈 ▶ /w 김태희 하이 로 chat을 받음
-	      System.out.println(chat);  //서버 확인 차 작성
+	      System.out.println("TcpMulServer "+chat);  //서버 확인 차 작성
 	      String chatset="";
 	      //gui에서 입력된 chat값을 받아 옴
 //        outputStream.writeUTF(nickname+"-->" + jtfield1.getText());
@@ -141,13 +138,11 @@ public class TcpMulServer{
 	          }
 	    				  
 			  for(int i=0; i<threadList.size(); i++) {
-//				  if(userList.get(i).equals(to)) {
-				  if(threadList.get(i).nickname.equals(to)) {
+				  if(userList.get(i).equals(to)) {
 					  String send="[귓속말 수신]"+from+"님에게 옴"+"\n"+"<< "+chatset;
 					  threadList.get(i).outputStream.writeUTF(send);	                    
 				  }
-//				  if(userList.get(i).equals(from)) {//똑같이 보낸쪽 쓰레드도 찾아서 보내줌
-				  if(threadList.get(i).nickname.equals(from)) {
+				  if(userList.get(i).equals(from)) {//똑같이 보낸쪽 쓰레드도 찾아서 보내줌
 					  String send="[귓속말 송신]"+to+"님에게 보냄"+"\n"+"<< "+chatset;
 					  threadList.get(i).outputStream.writeUTF(send);	                    
 				  }
@@ -155,7 +150,6 @@ public class TcpMulServer{
 
 	       }else{ //귓속말이 아니면 모든 사람에게 전송
 	         for(int i=0;i<threadList.size();i++)
-	         
 	        	 threadList.get(i).outputStream.writeUTF(chat);//모든 클라이언트들에게 뿌려준다.
 	             //처음에 nickname이  채팅관련 모든 사람에게 전송      
 	      }

@@ -58,12 +58,9 @@ public class ChatAccess extends JFrame {
 		panel.setBounds(0, 0, 893, 593);
 		panel.setLayout(null);
 		
-		
 		//ip
-//		lbIP.setBounds(46, 274, 99, 37);
 		lbIP.setBounds(46, 396, 99, 31);
 		lbIP.setFont(new Font("굴림", Font.BOLD, 17));
-//		txtIp.setBounds(152, 278, 241, 31);
 		txtIp.setBounds(172, 400, 221, 31);
 		txtIp.setFont(new Font("굴림", Font.BOLD, 17));
 		txtIp.setText("127.0.0.1");
@@ -111,16 +108,13 @@ public class ChatAccess extends JFrame {
 //						chkuser = ChatDAO.getInstance().checkUser("##"+nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						chkuser = ChatDAO.getInstance().checkUser(nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						if (chkuser) {
-//							JOptionPane.showMessageDialog(null, "이전에 사용하셨던 닉네임입니다.");
 							JOptionPane.showMessageDialog(null, "현재 동일한 닉네임으로 접속중입니다.");
 						}else {
 							ChatDAO.getInstance().insertUser(nickname2);//userList명단에 추가, 접속 history
 							new TcpMulClient(ip2, port2, nickname2);
 							setVisible(false);
 						}
-//						ChatDAO.getInstance().insertUser(nickname2);//현재 접속중 인원에 유저이름만 추가
-//						new TcpMulClient(ip2, port2, nickname2);
-//						setVisible(false);
+//						
 					} catch (ClassNotFoundException | SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -145,16 +139,12 @@ public class ChatAccess extends JFrame {
 //						chkuser = ChatDAO.getInstance().checkUser("##"+nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						chkuser = ChatDAO.getInstance().checkUser(nickname2);//현재 접속한 동일한 유저네임이 있는지 체크
 						if (chkuser) {
-//							JOptionPane.showMessageDialog(null, "이전에 사용하셨던 닉네임입니다.");
 							JOptionPane.showMessageDialog(null, "현재 동일한 닉네임으로 접속중입니다.");
 						}else {
-							ChatDAO.getInstance().insertUser(nickname2);//현재 접속중 인원에 유저이름만 추가
+							ChatDAO.getInstance().insertUser(nickname2);//접속자 명단 일별로 저장
 							new TcpMulClient(ip2, port2, nickname2);
 							setVisible(false);
 						}
-//						ChatDAO.getInstance().insertUser(nickname2);//현재 접속중 인원에 유저이름만 추가
-//						new TcpMulClient(ip2, port2, nickname2);
-//						setVisible(false);
 					} catch (ClassNotFoundException | SQLException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -162,9 +152,9 @@ public class ChatAccess extends JFrame {
 				}
 			}
 		});
+		
 		cnp.add(panel);
 		setBounds(550,100, 452, 597);
-		
 		setVisible(true);
 		
 	}
@@ -172,7 +162,6 @@ public class ChatAccess extends JFrame {
 	
 	public static void main(String[] args) {
 		new ChatAccess();
-
 	}
 
 }
