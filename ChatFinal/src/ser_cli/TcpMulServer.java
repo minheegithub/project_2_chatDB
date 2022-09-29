@@ -140,11 +140,11 @@ public class TcpMulServer{
 	    				  
 			  for(int i=0; i<threadList.size(); i++) {
 				  if(userList.get(i).equals(to)) {
-					  String send="[±”º”∏ª ºˆΩ≈]"+from+"¥‘ø°∞‘ ø»"+"\n"+"<< "+chatset;
+					  String send="[±”º”∏ª ºˆΩ≈]"+from+"¥‘ø°∞‘ ø»"+"\n"+" >> "+chatset;
 					  threadList.get(i).outputStream.writeUTF(send);	                    
 				  }
 				  if(userList.get(i).equals(from)) {//∂»∞∞¿Ã ∫∏≥Ω¬  æ≤∑πµÂµµ √£æ∆º≠ ∫∏≥ª¡‹
-					  String send="[±”º”∏ª º€Ω≈]"+to+"¥‘ø°∞‘ ∫∏≥ø"+"\n"+"<< "+chatset;
+					  String send="[±”º”∏ª º€Ω≈]"+to+"¥‘ø°∞‘ ∫∏≥ø"+"\n"+" << "+chatset;
 					  threadList.get(i).outputStream.writeUTF(send);	                    
 				  }
 			  }
