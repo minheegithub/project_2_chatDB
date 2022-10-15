@@ -12,6 +12,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,16 +23,17 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import chatDB.ChatDAO;
 
@@ -51,8 +56,13 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 	JList list = new JList();//User_list
 	
 	JButton btnBring = new JButton("이전대화내용 불러오기");
-	JButton btnSend = new JButton("전송");//
+	JButton btnFile = new JButton("파일열기");//
+	JButton btnSendFile = new JButton("파일전송");//
 	
+	JLabel fileLb = new JLabel();//파일 이름
+	
+	File f;
+	byte[] byteBae;
 	public KajaClientGUI(DataOutputStream outputStream, DataInputStream inputStream, String nickname) throws ClassNotFoundException, SQLException {// 생성자
 		this.outputStream = outputStream;
 		this.inputStream = inputStream;
@@ -79,10 +89,22 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 		panel.setLayout(null);
 		
 		btnBring.setBackground(SystemColor.activeCaption);
-		btnBring.setBounds(372, 31, 194, 33);
+		btnBring.setBounds(372, 30, 194, 33);
 		panel.add(btnBring);
 		btnBring.setFont(new Font("굴림", Font.BOLD, 15));		
 		btnBring.addActionListener(this);
+		
+        btnFile.setBackground(SystemColor.activeCaption);
+        btnFile.setBounds(40, 30, 105, 30);
+        panel.add(btnFile);
+        btnFile.setFont(new Font("굴림", Font.BOLD, 17));
+        btnFile.addActionListener(this);
+		
+		fileLb.setForeground(Color.WHITE);
+		fileLb.setBackground(Color.BLACK);
+		fileLb.setFont(new Font("굴림", Font.BOLD, 14));
+		fileLb.setBounds(160, 30, 210, 33);
+        contentPane.add(fileLb);
 	      
         JLabel lbuser = new JLabel("닉네임");
         lbuser.setForeground(Color.WHITE);
@@ -104,11 +126,12 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
         lbList.setBounds(581,68, 133, 33);
         contentPane.add(lbList);
       
-        btnSend.setBackground(SystemColor.activeCaption);
-        btnSend.setBounds(580, 505, 105, 30);
-        panel.add(btnSend);
-        btnSend.setFont(new Font("굴림", Font.BOLD, 17));
-        btnSend.addActionListener(this);
+        btnSendFile.setBackground(SystemColor.activeCaption);
+        btnSendFile.setBounds(600, 501, 105, 30);
+        panel.add(btnSendFile);
+        btnSendFile.setFont(new Font("굴림", Font.BOLD, 17));
+        btnSendFile.addActionListener(this);
+        btnSendFile.setVisible(false);
 
 		jtarea1.setFont(new Font("굴림", Font.BOLD, 18));
 		jtarea1.setEditable(false);
@@ -150,7 +173,8 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 	}// 생성자-end
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnSend || e.getSource() == jtfield1) {
+		/*if (e.getSource() == btnSend || e.getSource() == jtfield1) {*/
+		if (e.getSource() == jtfield1) {
 			try {
 				System.out.println("KajaClientGUI "+nickname+"클라이언트에서 전송버튼 누른뒤 output으로 내보내는 대화내용 : "+nickname + " ▶ " + jtfield1.getText());
 				// nickname과 client의 chat을 서버로
@@ -167,6 +191,57 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		}else if(e.getSource() == btnFile) {
+			JFileChooser choice = new JFileChooser();
+//			확장자명 설정("파일유형 확장자표시","확장자")
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG, jpg", "jpg");
+			choice.setFileFilter(filter);
+			//열어주는 메소드 
+			//null - 전체화면의 중앙
+			//열기버튼 - approve 옵션 반환, 취소버튼 - cancel옵션 반환
+			int returnVal = choice.showOpenDialog(null);
+			if(returnVal != JFileChooser.APPROVE_OPTION){
+				JOptionPane.showMessageDialog(null, "파일선택을 하세요", "경고", JOptionPane.WARNING_MESSAGE);
+				return;			}
+			//선택된 파일의 경로값 얻어오기
+			String filePath = choice.getSelectedFile().getPath();
+			System.out.println(filePath);
+			f = choice.getSelectedFile();
+			System.out.println(f.getName());
+			fileLb.setText(f.getName());
+
+			FileInputStream fis1;
+			try {
+				fis1 = new FileInputStream(f);
+				DataInputStream dis1 = new DataInputStream(fis1);
+				byteBae = new byte[(int)f.length()];
+				//파일의 길이만큼 바이트 배열을 집음
+				System.out.println("file--> byte중....");
+				dis1.readFully(byteBae);//*파일내용 -->바이트 배열에 얺는다.* 100바이티라면 1000100100....
+				btnSendFile.setVisible(true);
+
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}else if(e.getSource() == btnSendFile) {
+			String name = (String)list.getSelectedValue();
+			if(name == null) {
+				JOptionPane.showMessageDialog(this, "파일을 보낼 접속멤버 한명을 선택해주세요");
+			}else {
+				String fileText = " /f "+name+" "+f.getName();//
+				// nickname과 client의 chat을 서버로
+				try {
+					outputStream.writeUTF(nickname + " ▶ " + fileText);
+					outputStream.writeInt(byteBae.length);//파일 길이 먼저 정송 4바이트 확보, 0100001/  100을 보낸다. 
+					outputStream.write(byteBae);//파일자체를 바이트 배열 전송
+					System.out.println("전송했당~~~");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		}
 	}// actionPerformed - end
 
@@ -182,8 +257,29 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 					jtarea1.append("\n" + "종료");
 					return;
 				}
+				if(strServer1.split("/f").length == 2) {
+					JOptionPane.showMessageDialog(this, "파일이 도착했습니다.");
+					String bea[] = strServer1.split("/f");
+					jtarea1.append("\n" + bea[1]);
+					String filename1 = inputStream.readUTF();
+					jtarea1.append("\n" + filename1+"다운로드 완료");
+					//file길이, 내용받아 ---> byte배열로
+					int len1 = inputStream.readInt();//서버가 보낸 파일 길이 먼저 받아옴
+					byte[] byteBae2 = new byte[len1];
+					inputStream.readFully(byteBae2);//그리고 내용받아 바이트 배열로 
+					
+					File f = new File("C:/itBank/"+nickname+"chat");
+					if(!f.exists()) {
+						f.mkdir();
+					}
+					FileOutputStream fos1 = new FileOutputStream("C:/itBank/"+nickname+"chat/"+filename1);
+					fos1.write(byteBae2);//받은 바이트 배열 ---> 파일
 				
-				jtarea1.append("\n" + strServer1);	
+				}else {
+					
+					jtarea1.append("\n" + strServer1);	
+				}
+				
 				
 				DefaultListModel listModel = new DefaultListModel<>();// 리스트에들어갈 모델 생성 
 				ArrayList<String> arrList = dao.CurrentMem(); //모델에 넣어줄 어레이리스트와 거기에 들어갈 현재접속인원 테이블 

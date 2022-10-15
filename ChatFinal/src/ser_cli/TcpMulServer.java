@@ -28,12 +28,11 @@ public class TcpMulServer{
 		ss1 = new ServerSocket(portno);
 
 		while (true) {
-			s1 = ss1.accept();//클라이언트마다 포트번호 다르다.
+			s1 = ss1.accept();
 			System.out.println("TcpMulServer 클라이언트 아이피 주소: " + s1.getInetAddress() + " , 클라이언트 접속포트: " + s1.getPort()+", 서버포트:"+s1.getLocalPort());
 			serverIp = s1.getLocalAddress().toString();
-			clientIp = s1.getInetAddress().toString();//+
-			serverPort = s1.getLocalPort();//+
-//			System.out.println(serverIp.substring(1, serverIp.length()));
+			clientIp = s1.getInetAddress().toString();
+			serverPort = s1.getLocalPort();
 			serverIp = serverIp.substring(1, serverIp.length());
 			clientIp = clientIp.substring(1, clientIp.length());
 			// 한명이 접속하면 ThreadServerClass 쓰레드에 올려놓음
@@ -83,16 +82,21 @@ public class TcpMulServer{
 				}
 				//클라이언트 한사람에게 들어온 대화 내용을 다른사람들에게 뿌려줄 준비를 하겠다.
 				while (inputStream != null) {
+					
 					contents = inputStream.readUTF();
-					if(contents.split("/w").length == 1) {  
+					if(contents.split("/f").length >= 2){
+						sendFile(contents);
+					}else if(contents.split("/w").length == 1) {
 						try {
 							//귓속말이 아닌경우에만 대화내용 db에 저장
 							ChatDAO.getInstance().insertDb(nickname, serverIp1, clientIp1, serverPort1, contents);
+							sendChat(contents); //outputStream
 						} catch (ClassNotFoundException | SQLException e) {
 						}
+					}else {
+						//클라이언트가 보낸 채팅 내용을 sendChat메소드를 이용해 접속한 사람(들)에게 내보내기로 한다.
+						sendChat(contents); //outputStream
 					}
-					//클라이언트가 보낸 채팅 내용을 sendChat메소드를 이용해 접속한 사람(들)에게 내보내기로 한다.
-					sendChat(contents); //outputStream
 				
 				} // 정상채팅의 경우는 계속 while 문안에서 반복 loop
 
@@ -118,6 +122,35 @@ public class TcpMulServer{
 			} // finally-end
 
 		}// run-end
+		public void sendFile(String chat) throws IOException{
+			int len1 = inputStream.readInt();
+			byte[] byteBae2 = new byte[len1];
+			inputStream.readFully(byteBae2);//파일 받아 바이트 배열로 
+			
+			 String chatset="";
+			 //정지훈 ▶ /f 김태희 파일이름
+			 String w[] = chat.split("/f");   //저장되는 값 [정지훈 ▶ , 김태희 파일이름]
+			 String from=w[0].split("▶")[0].trim(); //from 뒤에 공백이 하나 있었음 , 정지훈
+			 String w2[]=w[1].split(" ");  //저장되는 값 [ ,김태희,파일이름]
+			 String to=w2[1];//김태희
+			 String filename = w2[2];
+			
+			for(int i=0; i<threadList.size(); i++) {
+			  if(userList.get(i).equals(to)) {
+				  String send="/f[파일 수신]"+from+"님에게 옴 ===> ";
+				  threadList.get(i).outputStream.writeUTF(send);	                    
+				  threadList.get(i).outputStream.writeUTF(filename);	                    
+				  threadList.get(i).outputStream.writeInt(byteBae2.length);//파일 길이 먼저 정송 4바이트 확보, 0100001/  100을 보낸다. 
+				  threadList.get(i).outputStream.write(byteBae2);	                    
+			  }
+			  if(userList.get(i).equals(from)) {//똑같이 보낸쪽 쓰레드도 찾아서 보내줌
+				  String send="<=== [파일 송신]"+to+"님에게 보냄";
+				  threadList.get(i).outputStream.writeUTF(send);	                    
+			  }
+		  }
+
+		}
+		
 	}// ThreadServerClass-end
 	
 	public void sendChat(String chat) throws IOException {
@@ -150,9 +183,11 @@ public class TcpMulServer{
 			  }
 
 	       }else{ //귓속말이 아니면 모든 사람에게 전송
-	         for(int i=0;i<threadList.size();i++)
+	         for(int i=0;i<threadList.size();i++) {
+	        	 
 	        	 threadList.get(i).outputStream.writeUTF(chat);//모든 클라이언트들에게 뿌려준다.
-	             //처음에 nickname이  채팅관련 모든 사람에게 전송      
+	        	 //처음에 nickname이  채팅관련 모든 사람에게 전송      
+	         }
 	      }
 	   }//sendChat-end
 
