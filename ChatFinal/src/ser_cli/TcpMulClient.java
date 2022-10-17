@@ -12,7 +12,6 @@ public class TcpMulClient{
 	public TcpMulClient(String ip, String port, String nickname) {
 		try { // ip주소 //포트번호
 			Socket s1 = new Socket(ip, Integer.parseInt(port));
-			System.out.println("TcpMulClient 클라이언트에서 서버에 찾아감....."+s1+"닉네임은?"+nickname);
 
 			DataOutputStream outputStream = new DataOutputStream(s1.getOutputStream());
 			DataInputStream inputStream = new DataInputStream(s1.getInputStream());

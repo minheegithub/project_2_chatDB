@@ -84,7 +84,6 @@ public class ChatDAO {
 	}// getAllInfo()-end
 
 	public boolean checkUser(String nickname) {
-//		String sql = "SELECT nickname FROM userList WHERE nickname = ?";
 		String sql = "SELECT nickname FROM memberList WHERE nickname = ?";
 		try {
 			pstmt = con.prepareStatement(sql);
@@ -118,7 +117,6 @@ public class ChatDAO {
 			pstmt.setString(3, "일");
 			
 			pstmt.executeQuery();
-//			System.out.println("대화내용 저장");
 		} catch (SQLException e) {
 			System.out.println("insert Exception");
 		} finally {

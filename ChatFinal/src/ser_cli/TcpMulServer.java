@@ -37,7 +37,7 @@ public class TcpMulServer{
 			clientIp = clientIp.substring(1, clientIp.length());
 			// 한명이 접속하면 ThreadServerClass 쓰레드에 올려놓음
 			ThreadServerClass tServer1 = new ThreadServerClass(s1,serverIp, clientIp, serverPort);
-			tServer1.start();
+			tServer1.start();//run()메소드 호출
 
 			threadList.add(tServer1);
 			System.out.println("TcpMulServer접속자 수 : " + threadList.size());//클라이언트가 나갔을때 콘솔에 표시
@@ -64,7 +64,7 @@ public class TcpMulServer{
 			inputStream = new DataInputStream(s1.getInputStream());
 			outputStream = new DataOutputStream(s1.getOutputStream());
 			
-		}
+		}//ThreadServerClass 생성자
 
 		@Override
 		public void run() { // remember !!!!!! 한사람 서버로 접속한 경우임
@@ -122,12 +122,13 @@ public class TcpMulServer{
 			} // finally-end
 
 		}// run-end
+		
+		//by최민희 파일 전송 메소드
 		public void sendFile(String chat) throws IOException{
 			int len1 = inputStream.readInt();
 			byte[] byteBae2 = new byte[len1];
 			inputStream.readFully(byteBae2);//파일 받아 바이트 배열로 
 			
-			 String chatset="";
 			 //정지훈 ▶ /f 김태희 파일이름
 			 String w[] = chat.split("/f");   //저장되는 값 [정지훈 ▶ , 김태희 파일이름]
 			 String from=w[0].split("▶")[0].trim(); //from 뒤에 공백이 하나 있었음 , 정지훈
@@ -149,46 +150,46 @@ public class TcpMulServer{
 			  }
 		  }
 
-		}
+		}//sendChat
 		
 	}// ThreadServerClass-end
 	
 	public void sendChat(String chat) throws IOException {
-		//닉네임 정지훈이 채팅방에 귓속말로 김태희에게 "하이"라고 입력했을때
-	      //입력 : /w 김태희 하이
-	      //실제 보내지는 내용 : 정지훈 ▶ /w 김태희 하이 로 chat을 받음
-	      System.out.println("TcpMulServer "+chat);  //서버 확인 차 작성
-	      String chatset="";
-	      //gui에서 입력된 chat값을 받아 옴
+	  //닉네임 정지훈이 채팅방에 귓속말로 김태희에게 "하이"라고 입력했을때
+      //입력 : /w 김태희 하이
+      //실제 보내지는 내용 : 정지훈 ▶ /w 김태희 하이 로 chat을 받음
+      System.out.println("TcpMulServer "+chat);  //서버 확인 차 작성
+      String chatset="";
+      //gui에서 입력된 chat값을 받아 옴
 //        outputStream.writeUTF(nickname+"-->" + jtfield1.getText());
-	      if(chat.split("/w").length !=1) { //만약 chat에 /w 이라는 문구가 존재한다면
+      if(chat.split("/w").length !=1) { //만약 chat에 /w 이라는 문구가 존재한다면
 //	    	    정지훈 ▶ /w 김태희 하이 방가
-    		  String w[] = chat.split("/w");   //저장되는 값 [정지훈 ▶ , 김태희 하이 방가]
-	    	  String from=w[0].split("▶")[0].trim(); //from 뒤에 공백이 하나 있었음 , 정지훈
-	          String w2[]=w[1].split(" ");  //저장되는 값 [ ,김태희,하이,방가]
-	          String to=w2[1];//김태희
-	          for(int z=2;z<w2.length;z++) {
-	            chatset+=w2[z]+" "; //띄어쓰기 구분으로 배열에 들어가있기 때문에 함께 넣어줌
-	          }
-	    				  
-			  for(int i=0; i<threadList.size(); i++) {
-				  if(userList.get(i).equals(to)) {
-					  String send="[귓속말 수신]"+from+"님에게 옴"+"\n"+" >> "+chatset;
-					  threadList.get(i).outputStream.writeUTF(send);	                    
-				  }
-				  if(userList.get(i).equals(from)) {//똑같이 보낸쪽 쓰레드도 찾아서 보내줌
-					  String send="[귓속말 송신]"+to+"님에게 보냄"+"\n"+" << "+chatset;
-					  threadList.get(i).outputStream.writeUTF(send);	                    
-				  }
+		  String w[] = chat.split("/w");   //저장되는 값 [정지훈 ▶ , 김태희 하이 방가]
+    	  String from=w[0].split("▶")[0].trim(); //from 뒤에 공백이 하나 있었음 , 정지훈
+          String w2[]=w[1].split(" ");  //저장되는 값 [ ,김태희,하이,방가]
+          String to=w2[1];//김태희
+          for(int z=2;z<w2.length;z++) {
+            chatset+=w2[z]+" "; //띄어쓰기 구분으로 배열에 들어가있기 때문에 함께 넣어줌
+          }
+    				  
+		  for(int i=0; i<threadList.size(); i++) {
+			  if(userList.get(i).equals(to)) {
+				  String send="[귓속말 수신]"+from+"님에게 옴"+"\n"+" >> "+chatset;
+				  threadList.get(i).outputStream.writeUTF(send);	                    
 			  }
+			  if(userList.get(i).equals(from)) {//똑같이 보낸쪽 쓰레드도 찾아서 보내줌
+				  String send="[귓속말 송신]"+to+"님에게 보냄"+"\n"+" << "+chatset;
+				  threadList.get(i).outputStream.writeUTF(send);	                    
+			  }
+		  }
 
-	       }else{ //귓속말이 아니면 모든 사람에게 전송
-	         for(int i=0;i<threadList.size();i++) {
-	        	 
-	        	 threadList.get(i).outputStream.writeUTF(chat);//모든 클라이언트들에게 뿌려준다.
-	        	 //처음에 nickname이  채팅관련 모든 사람에게 전송      
-	         }
-	      }
-	   }//sendChat-end
+       }else{ //귓속말이 아니면 모든 사람에게 전송
+         for(int i=0;i<threadList.size();i++) {
+        	 
+        	 threadList.get(i).outputStream.writeUTF(chat);//모든 클라이언트들에게 뿌려준다.
+        	 //처음에 nickname이  채팅관련 모든 사람에게 전송      
+         }
+      }
+   }//sendChat-end
 
 }// ServerClass-end

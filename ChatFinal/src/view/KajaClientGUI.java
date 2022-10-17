@@ -173,10 +173,8 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 	}// 생성자-end
 
 	public void actionPerformed(ActionEvent e) {
-		/*if (e.getSource() == btnSend || e.getSource() == jtfield1) {*/
 		if (e.getSource() == jtfield1) {
 			try {
-				System.out.println("KajaClientGUI "+nickname+"클라이언트에서 전송버튼 누른뒤 output으로 내보내는 대화내용 : "+nickname + " ▶ " + jtfield1.getText());
 				// nickname과 client의 chat을 서버로
 				outputStream.writeUTF(nickname + " ▶ " + jtfield1.getText());
 			
@@ -202,7 +200,8 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 			int returnVal = choice.showOpenDialog(null);
 			if(returnVal != JFileChooser.APPROVE_OPTION){
 				JOptionPane.showMessageDialog(null, "파일선택을 하세요", "경고", JOptionPane.WARNING_MESSAGE);
-				return;			}
+				return;			
+			}
 			//선택된 파일의 경로값 얻어오기
 			String filePath = choice.getSelectedFile().getPath();
 			System.out.println(filePath);
@@ -279,7 +278,6 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 					
 					jtarea1.append("\n" + strServer1);	
 				}
-				
 				
 				DefaultListModel listModel = new DefaultListModel<>();// 리스트에들어갈 모델 생성 
 				ArrayList<String> arrList = dao.CurrentMem(); //모델에 넣어줄 어레이리스트와 거기에 들어갈 현재접속인원 테이블 

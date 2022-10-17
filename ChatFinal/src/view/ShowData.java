@@ -38,8 +38,6 @@ public class ShowData extends JFrame {
 
 		table = new JTable(data, colName);
 		
-		
-		
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
         table.getColumnModel().getColumn(0).setMinWidth(100);
         table.getColumnModel().getColumn(0).setWidth(100);
