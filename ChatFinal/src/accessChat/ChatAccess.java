@@ -11,7 +11,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -112,7 +111,6 @@ public class ChatAccess extends JFrame {
 							new TcpMulClient(ip2, port2, nickname2);
 							setVisible(false);
 						}
-//						
 					} catch (ClassNotFoundException | SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -148,13 +146,10 @@ public class ChatAccess extends JFrame {
 				}
 			}
 		});
-		
 		cnp.add(panel);
 		setBounds(550,100, 452, 597);
 		setVisible(true);
-		
 	}
-	
 	
 	public static void main(String[] args) {
 		new ChatAccess();

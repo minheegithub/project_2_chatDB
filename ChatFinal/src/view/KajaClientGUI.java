@@ -55,9 +55,10 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 	//접속자리스트
 	JList list = new JList();//User_list
 	
-	JButton btnBring = new JButton("이전대화내용 불러오기");
-	JButton btnFile = new JButton("파일열기");//
-	JButton btnSendFile = new JButton("파일전송");//
+	JButton btnBring = new JButton("이전대화");
+	JButton btnFile = new JButton("파일열기");
+	JButton btnSendFile = new JButton("파일전송");
+	JButton btnWhisper = new JButton("귓속말");
 	
 	JLabel fileLb = new JLabel();//파일 이름
 	
@@ -88,10 +89,16 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 		panel.setBounds(0, 0, 787, 581);
 		panel.setLayout(null);
 		
+        btnWhisper.setBackground(SystemColor.activeCaption);
+        btnWhisper.setBounds(460, 30, 105, 30);
+        panel.add(btnWhisper);
+        btnWhisper.setFont(new Font("굴림", Font.BOLD, 17));
+        btnWhisper.addActionListener(this);
+		
 		btnBring.setBackground(SystemColor.activeCaption);
-		btnBring.setBounds(372, 30, 194, 33);
+		btnBring.setBounds(340, 30, 105, 30);
 		panel.add(btnBring);
-		btnBring.setFont(new Font("굴림", Font.BOLD, 15));		
+		btnBring.setFont(new Font("굴림", Font.BOLD, 17));		
 		btnBring.addActionListener(this);
 		
         btnFile.setBackground(SystemColor.activeCaption);
@@ -102,14 +109,14 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 		
 		fileLb.setForeground(Color.WHITE);
 		fileLb.setBackground(Color.BLACK);
-		fileLb.setFont(new Font("굴림", Font.BOLD, 14));
+		fileLb.setFont(new Font("굴림", Font.BOLD, 17));
 		fileLb.setBounds(160, 30, 210, 33);
         contentPane.add(fileLb);
 	      
         JLabel lbuser = new JLabel("닉네임");
         lbuser.setForeground(Color.WHITE);
         lbuser.setBackground(Color.BLACK);
-        lbuser.setFont(new Font("굴림", Font.BOLD, 14));
+        lbuser.setFont(new Font("굴림", Font.BOLD, 17));
         lbuser.setBounds(581, 27, 62, 33);
         contentPane.add(lbuser);
       
@@ -132,7 +139,7 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
         btnSendFile.setFont(new Font("굴림", Font.BOLD, 17));
         btnSendFile.addActionListener(this);
         btnSendFile.setVisible(false);
-
+        
 		jtarea1.setFont(new Font("굴림", Font.BOLD, 18));
 		jtarea1.setEditable(false);
 
@@ -227,7 +234,7 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 		}else if(e.getSource() == btnSendFile) {
 			String name = (String)list.getSelectedValue();
 			if(name == null) {
-				JOptionPane.showMessageDialog(this, "파일을 보낼 접속멤버 한명을 선택해주세요");
+				JOptionPane.showMessageDialog(this, "접속멤버 한명을 선택해주세요");
 			}else {
 				String fileText = " /f "+name+" "+f.getName();//
 				// nickname과 client의 chat을 서버로
@@ -240,6 +247,21 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
+		}else if(e.getSource() == btnWhisper) {
+			String name = (String)list.getSelectedValue();
+			if(name == null) {
+				JOptionPane.showMessageDialog(this, "접속멤버 한명을 선택해주세요");
+			}else {
+				String fileText = " /w "+name+" "+jtfield1.getText();
+				// nickname과 client의 chat을 서버로
+				try {
+					outputStream.writeUTF(nickname + " ▶ " + fileText);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				jtfield1.setText("");
 			}
 		}
 	}// actionPerformed - end

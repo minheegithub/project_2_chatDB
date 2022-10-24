@@ -36,7 +36,7 @@ public class TcpMulServer{
 			serverIp = serverIp.substring(1, serverIp.length());
 			clientIp = clientIp.substring(1, clientIp.length());
 			// 한명이 접속하면 ThreadServerClass 쓰레드에 올려놓음
-			ThreadServerClass tServer1 = new ThreadServerClass(s1,serverIp, clientIp, serverPort);
+			ThreadServerClass tServer1 = new ThreadServerClass(s1, serverIp, clientIp, serverPort);
 			tServer1.start();//run()메소드 호출
 
 			threadList.add(tServer1);
