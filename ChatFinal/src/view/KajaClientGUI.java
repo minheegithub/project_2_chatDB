@@ -279,22 +279,41 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 					return;
 				}
 				if(strServer1.split("/f").length == 2) {
-					JOptionPane.showMessageDialog(this, "파일이 도착했습니다.");
-					String bea[] = strServer1.split("/f");
-					jtarea1.append("\n" + bea[1]);
-					String filename1 = inputStream.readUTF();
-					jtarea1.append("\n" + filename1+"다운로드 완료");
-					//file길이, 내용받아 ---> byte배열로
-					int len1 = inputStream.readInt();//서버가 보낸 파일 길이 먼저 받아옴
-					byte[] byteBae2 = new byte[len1];
-					inputStream.readFully(byteBae2);//그리고 내용받아 바이트 배열로 
+//					JOptionPane.showMessageDialog(this, "파일이 도착했습니다.");
+					int result = JOptionPane.showConfirmDialog(this, "파일을 받으시겠습니까?","파일 확인",JOptionPane.YES_NO_OPTION);
 					
-					File f = new File("C:/itBank/"+nickname+"chat");
-					if(!f.exists()) {
-						f.mkdir();
+					if(result == JOptionPane.YES_OPTION) {//사용자가 예를 선택한 경우
+						
+						String bea[] = strServer1.split("/f");
+						jtarea1.append("\n" + bea[1]);
+						String filename1 = inputStream.readUTF();
+						jtarea1.append("\n" + filename1+" 다운로드 완료");
+						//file길이, 내용받아 ---> byte배열로
+						int len1 = inputStream.readInt();//서버가 보낸 파일 길이 먼저 받아옴
+						byte[] byteBae2 = new byte[len1];
+						inputStream.readFully(byteBae2);//그리고 내용받아 바이트 배열로 
+						
+						File f = new File("C:/"+nickname+"chat");
+						if(!f.exists()) {
+							f.mkdir();
+						}
+						
+						FileOutputStream fos1 = new FileOutputStream("C:/"+nickname+"chat/"+filename1);
+						fos1.write(byteBae2);//받은 바이트 배열 ---> 파일
+					
+					}else{//다아이얼 로그 창을 닫은 경우 + 아니오를 선택한 경우
+						
+						String bea[] = strServer1.split("/f");
+						jtarea1.append("\n" + bea[1]);
+						String filename1 = inputStream.readUTF();
+						jtarea1.append("\n" + filename1+" 파일 수신 거부");
+						//file길이, 내용받아 ---> byte배열로
+						int len1 = inputStream.readInt();//서버가 보낸 파일 길이 먼저 받아옴
+						byte[] byteBae2 = new byte[len1];
+						inputStream.readFully(byteBae2);//그리고 내용받아 바이트 배열로 
+					
 					}
-					FileOutputStream fos1 = new FileOutputStream("C:/itBank/"+nickname+"chat/"+filename1);
-					fos1.write(byteBae2);//받은 바이트 배열 ---> 파일
+				
 				
 				}else {
 					

@@ -138,7 +138,7 @@ public class TcpMulServer{
 			
 			for(int i=0; i<threadList.size(); i++) {
 			  if(userList.get(i).equals(to)) {
-				  String send="/f[파일 수신]"+from+"님에게 옴 ===> ";
+				  String send="/f[파일 수신]"+from+"님에게서 옴 ===> ";
 				  threadList.get(i).outputStream.writeUTF(send);	                    
 				  threadList.get(i).outputStream.writeUTF(filename);	                    
 				  threadList.get(i).outputStream.writeInt(byteBae2.length);//파일 길이 먼저 정송 4바이트 확보, 0100001/  100을 보낸다. 
@@ -174,7 +174,7 @@ public class TcpMulServer{
     				  
 		  for(int i=0; i<threadList.size(); i++) {
 			  if(userList.get(i).equals(to)) {
-				  String send="[귓속말 수신]"+from+"님에게 옴"+"\n"+" >> "+chatset;
+				  String send="[귓속말 수신]"+from+"님에게서 옴"+"\n"+" >> "+chatset;
 				  threadList.get(i).outputStream.writeUTF(send);	                    
 			  }
 			  if(userList.get(i).equals(from)) {//똑같이 보낸쪽 쓰레드도 찾아서 보내줌
