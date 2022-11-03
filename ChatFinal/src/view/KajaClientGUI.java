@@ -294,12 +294,12 @@ public class KajaClientGUI extends JFrame implements Runnable, ActionListener {
 						inputStream.readFully(byteBae2);//그리고 내용받아 바이트 배열로 
 						
 //						File f = new File("C:/"+nickname+"chat");
-						File f = new File(".\\src\\"+nickname+"chat");
+						File f = new File(".\\src\\"+nickname+"FileDown");
 						if(!f.exists()) {
 							f.mkdir();
 						}
 						
-						FileOutputStream fos1 = new FileOutputStream(".\\src\\"+nickname+"chat/"+filename1);
+						FileOutputStream fos1 = new FileOutputStream(".\\src\\"+nickname+"FileDown\\"+filename1);
 						fos1.write(byteBae2);//받은 바이트 배열 ---> 파일
 					
 					}else{//다아이얼 로그 창을 닫은 경우 + 아니오를 선택한 경우
