@@ -1,7 +1,7 @@
 
 
 <p align="center"><img src="https://user-images.githubusercontent.com/106230507/202123492-2e51e8fc-be90-4edd-b9bc-778eab78f915.png" width="200"></p>
-<h2 align="center">1st Project SweetDelievery</h2>
+<h2 align="center">2nd Project TALKTALK</h2>
 
 
 <p align="center"><b>JAVA 다중 채팅 프로젝트</b></p>
