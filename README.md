@@ -1,6 +1,6 @@
 
 
-<p align="center"><img src="https://user-images.githubusercontent.com/106230507/202123492-2e51e8fc-be90-4edd-b9bc-778eab78f915.png"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/106230507/202123492-2e51e8fc-be90-4edd-b9bc-778eab78f915.png" width="200"></p>
 <h2 align="center">1st Project SweetDelievery</h2>
 
 
